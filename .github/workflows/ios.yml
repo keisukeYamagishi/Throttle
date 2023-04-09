@@ -1,0 +1,18 @@
+name: build
+
+on: [push, pull_request]
+
+jobs:
+  run-test:
+    runs-on: macOS-latest
+    strategy:
+      matrix:
+        swift-version: [5.0, 4.2, 4.0]
+    steps:
+      - uses: actions/checkout@v1
+      - name: Debug build
+        run: swift build
+      - name: Execute test
+        env:
+          SWIFT_VERSION: ${{ matrix.swift-version }}
+        run:  swift test
