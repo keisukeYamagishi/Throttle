@@ -21,6 +21,8 @@ public class Throttle {
     public func execute(interval: DispatchTimeInterval,
                  emit: @escaping (() -> Void))
     {
+        guard !_isStartTimer else { return }
+
         let currentDate = _now
         let timeInterval: DispatchTimeInterval
         if let lastSendingTime = _lastSentTime {
@@ -29,7 +31,6 @@ public class Throttle {
         } else {
             timeInterval = .nanoseconds(0)
         }
-        guard !_isStartTimer else { return }
 
         if timeInterval.isNow {
             _lastSentTime = _now
