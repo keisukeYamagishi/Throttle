@@ -5,6 +5,7 @@ on: [push, pull_request]
 jobs:
   run-test:
     runs-on: macOS-latest
+    timeout-minutes: 10
     strategy:
       matrix:
         swift-version: [5.0, 4.2, 4.0]

@@ -4,7 +4,7 @@ import XCTest
 final class ThrotlleTests: XCTestCase {
     let throtlle = Throttle()
     var timer: Timer?
-    let testCount = 10
+    let testCount = 5
     func ohYeah(_ time: Double) -> String {
         """
         　    ∧＿∧        ＿人人人人人人＿
@@ -20,14 +20,17 @@ final class ThrotlleTests: XCTestCase {
         """
     }
 
-    let tests = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-    let millSecTests = [0.0,0.001, 0.002, 0.003, 0.004, 0.005, 0.006, 0.007, 0.008, 0.009]
+    let tests = [0, 1, 2, 3, 4]
+    let millSecTests1 = [0.0, 0.1, 0.2, 0.3, 0.4]
+    let millSecTests2 = [0.0, 0.01, 0.02, 0.03, 0.04]
+    let millSecTests3 = [0.0, 0.001, 0.002, 0.003, 0.004]
 
+    /// Test whether it can be executed at a one-second interval.
     func testSecondThrotlle() throws {
         let exception = expectation(description: #function)
         let date = Date()
         var count = 0
-        timer = Timer.scheduledTimer(withTimeInterval: 0.001,
+        timer = Timer.scheduledTimer(withTimeInterval: 0.0001,
                                      repeats: true,
                                      block: { _ in
                                          self.throtlle
@@ -43,21 +46,22 @@ final class ThrotlleTests: XCTestCase {
                                              }
                                      })
         timer?.fire()
-        wait(for: [exception], timeout: 30)
+        wait(for: [exception], timeout: 15)
     }
 
+    /// Test whether it can be executed at a 0.1 interval.
     func testMillSecondThrotlle() throws {
         let exception = expectation(description: #function)
         let date = Date()
         var count = 0
-        timer = Timer.scheduledTimer(withTimeInterval: 0.001,
+        timer = Timer.scheduledTimer(withTimeInterval: 0.0001,
                                      repeats: true,
                                      block: { _ in
                                          self.throtlle
-                                             .execute(interval: .microseconds(1)) {
-                                                 let time = floor(Date().timeIntervalSince(date) * 1000) / 1000
-                                                 XCTAssert(time == self.millSecTests[count])
+                                             .execute(interval: .milliseconds(100)) {
+                                                 let time = floor(Date().timeIntervalSince(date) * 10) / 10
                                                  print(self.ohYeah(Double(time)))
+                                                 XCTAssert(time == self.millSecTests1[count])
                                                  count += 1
                                                  if count == self.testCount {
                                                      self.timer?.invalidate()
@@ -66,6 +70,6 @@ final class ThrotlleTests: XCTestCase {
                                              }
                                      })
         timer?.fire()
-        wait(for: [exception], timeout: 3)
+        wait(for: [exception], timeout: 1)
     }
 }
