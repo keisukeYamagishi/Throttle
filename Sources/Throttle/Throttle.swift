@@ -11,6 +11,7 @@ public class Throttle {
     private var _now: Date {
         Date()
     }
+
     private var _lastSentTime: Date?
     private var _queue = DispatchQueue.main
     private var _leeway = DispatchTimeInterval.nanoseconds(0)
@@ -19,7 +20,7 @@ public class Throttle {
     public init() {}
 
     public func execute(interval: DispatchTimeInterval,
-                 emit: @escaping (() -> Void))
+                        emit: @escaping (() -> Void))
     {
         guard !_isStartTimer else { return }
 
@@ -42,7 +43,7 @@ public class Throttle {
     }
 
     private func _timerExecute(interval: DispatchTimeInterval,
-                       completion: @escaping (() -> Void))
+                               completion: @escaping (() -> Void))
     {
         _isStartTimer = true
         let deadline = DispatchTime.now() + interval
