@@ -21,7 +21,7 @@ final class ThrotlleTests: XCTestCase {
     }
 
     let tests = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-    let millSecTests = [0.001, 0.002, 0.003, 0.004, 0.005, 0.006, 0.007, 0.008, 0.009]
+    let millSecTests = [0.0,0.001, 0.002, 0.003, 0.004, 0.005, 0.006, 0.007, 0.008, 0.009]
 
     func testSecondThrotlle() throws {
         let exception = expectation(description: #function)
@@ -56,6 +56,7 @@ final class ThrotlleTests: XCTestCase {
                                          self.throtlle
                                              .execute(interval: .microseconds(1)) {
                                                  let time = floor(Date().timeIntervalSince(date) * 1000) / 1000
+                                                 XCTAssert(time == self.millSecTests[count])
                                                  print(self.ohYeah(Double(time)))
                                                  count += 1
                                                  if count == self.testCount {
