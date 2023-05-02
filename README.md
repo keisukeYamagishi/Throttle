@@ -18,12 +18,34 @@ $ git clone https://github.com/keisukeYamagishi/Throttle.git
 
 ## Installation
 
-***Swift Package Manager***
-File > Swift Packages > Add Package Dependency
+### Swift Package Manager
+
+`File` > `Swift Packages` > `Add Package Dependency`
 
 Add `https://github.com/keisukeYamagishi/Throttle.git`
 
-Select "Up to Next Major" with "1.0.0"
+Select "Up to Next Major" or "1.0.0"
+
+### Cocoapods
+
+
+[CocoaPods](http://cocoapods.org) is a dependency manager for Cocoa projects. You can install it with the following command:
+
+```bash
+$ gem install cocoapods
+```
+
+Write the following into the `Podfile`
+
+```Swift
+pod 'Throtlle'
+```
+Then, run the following command:
+
+```bash
+$ pod setup
+$ pod install
+```
 
 ## Usage
 
