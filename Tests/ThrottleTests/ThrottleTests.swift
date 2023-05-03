@@ -72,4 +72,28 @@ final class ThrotlleTests: XCTestCase {
         timer?.fire()
         wait(for: [exception], timeout: 1)
     }
+
+    /// Test whether it can be executed at a 0.1 interval.
+    func testMillSecondThrotlle2() throws {
+        let exception = expectation(description: #function)
+        let date = Date()
+        var count = 0
+        timer = Timer.scheduledTimer(withTimeInterval: 0.00001,
+                                     repeats: true,
+                                     block: { _ in
+                                         self.throtlle
+                                             .execute(interval: .milliseconds(10)) {
+                                                 let time = floor(Date().timeIntervalSince(date) * 100) / 100
+                                                 print(self.ohYeah(Double(time)))
+                                                 XCTAssert(time == self.millSecTests2[count])
+                                                 count += 1
+                                                 if count == 5 {
+                                                     self.timer?.invalidate()
+                                                     exception.fulfill()
+                                                 }
+                                             }
+                                     })
+        timer?.fire()
+        wait(for: [exception], timeout: 10)
+    }
 }
