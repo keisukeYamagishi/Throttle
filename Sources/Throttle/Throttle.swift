@@ -8,25 +8,25 @@
 import Foundation
 
 public class Throttle {
-    private var _now: Date {
+    private var now: Date {
         Date()
     }
 
-    private var _lastSentTime: Date?
-    private var _queue = DispatchQueue.main
-    private var _leeway = DispatchTimeInterval.nanoseconds(0)
-    private var _isStartTimer = false
+    private var lastSentTime: Date?
+    private var queue = DispatchQueue.main
+    private var leeway = DispatchTimeInterval.nanoseconds(0)
+    private var isStartTimer = false
 
     public init() {}
 
     public func execute(interval: DispatchTimeInterval,
                         emit: @escaping (() -> Void))
     {
-        guard !_isStartTimer else { return }
+        guard !isStartTimer else { return }
 
-        let currentDate = _now
+        let currentDate = now
         let timeInterval: DispatchTimeInterval
-        if let lastSendingTime = _lastSentTime {
+        if let lastSendingTime = lastSentTime {
             timeInterval = interval.between(earlierDate: lastSendingTime,
                                             laterDate: currentDate)
         } else {
@@ -34,31 +34,31 @@ public class Throttle {
         }
 
         if timeInterval.isNow {
-            _lastSentTime = _now
+            lastSentTime = now
             emit()
             return
         }
-        _timerExecute(interval: timeInterval,
+        timerExecute(interval: timeInterval,
                       completion: emit)
     }
 
-    private func _timerExecute(interval: DispatchTimeInterval,
+    private func timerExecute(interval: DispatchTimeInterval,
                                completion: @escaping (() -> Void))
     {
-        _isStartTimer = true
+        isStartTimer = true
         let deadline = DispatchTime.now() + interval
 
-        let timer = DispatchSource.makeTimerSource(queue: _queue)
-        timer.schedule(deadline: deadline, leeway: _leeway)
+        let timer = DispatchSource.makeTimerSource(queue: queue)
+        timer.schedule(deadline: deadline, leeway: leeway)
 
         var timerReference: DispatchSourceTimer? = timer
 
         timer.setEventHandler(handler: {
-            self._lastSentTime = self._now
+            self.lastSentTime = self.now
             timerReference?.cancel()
             timerReference = nil
             completion()
-            self._isStartTimer = false
+            self.isStartTimer = false
         })
         timer.resume()
     }
