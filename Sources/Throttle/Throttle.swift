@@ -33,7 +33,7 @@ public class Throttle {
             timeInterval = .nanoseconds(0)
         }
 
-        if timeInterval.isNow {
+        guard !timeInterval.isNow else {
             lastSentTime = now
             emit()
             return
